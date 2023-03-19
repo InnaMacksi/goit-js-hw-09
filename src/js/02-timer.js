@@ -9,9 +9,12 @@ const hoursValue = document.querySelector('span[data-hours]');
 const minutesValue = document.querySelector('span[data-minutes]');
 const secondsValue = document.querySelector('span[data-seconds]');
 
+chooseDate.addEventListener('input', handleTimerInputDate);
 btnStart.addEventListener('click', updateTimer);
+
 let countdownIntervalId;
 let selectedDateTime = 0;
+
 btnStart.disabled = true; //вимикаю кнопку на початку
 
 const options = {
@@ -21,6 +24,7 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     if (selectedDates[0] < options.defaultDate) {
+      btnStart.disabled = true; //вимикаю кнопку на початку
       Notiflix.Notify.failure('Please choose a date in the future');
       return;
     } else {
@@ -30,43 +34,32 @@ const options = {
   },
 };
 
-chooseDate.addEventListener('input', handleTimerInputDate);
-
 function handleTimerInputDate(e) {
   let currentTime = new Date();
   let timeDifference = selectedDateTime - currentTime.getTime();
   if (timeDifference <= 0) {
-    clearInterval(countdownIntervalId);
-    timeDifference = 0;
-    daysValue.textContent = '00';
-    hoursValue.textContent = '00';
-    minutesValue.textContent = '00';
-    secondsValue.textContent = '00';
+    resetTimer();
     return;
   }
   updateTimerDisplay(timeDifference);
   return timeDifference;
 }
+  
 
 function updateTimer() {
-  let timeDifference = handleTimerInputDate();
   if (countdownIntervalId) {
     clearInterval(countdownIntervalId);
   }
   countdownIntervalId = setInterval(() => {
     timeDifference = handleTimerInputDate();
     if (timeDifference <= 0) {
-      clearInterval(countdownIntervalId);
-      daysValue.textContent = '00';
-      hoursValue.textContent = '00';
-      minutesValue.textContent = '00';
-      secondsValue.textContent = '00';
-      timeDifference = 0;
+      resetTimer();
       Notiflix.Notify.success('Timer has ended!');
       return;
     }
   }, 1000);
 }
+
 function convertMs(ms) {
   // Number of milliseconds per unit of time
   const second = 1000;
@@ -96,6 +89,16 @@ function updateTimerDisplay(timeDifference) {
   minutesValue.textContent = addLeadingZero(timeObj.minutes);
   secondsValue.textContent = addLeadingZero(timeObj.seconds);
 }
+
+function resetTimer() {
+  clearInterval(countdownIntervalId);
+  timeDifference = 0;
+  daysValue.textContent = '00';
+  hoursValue.textContent = '00';
+  minutesValue.textContent = '00';
+  secondsValue.textContent = '00';
+}
+
 flatpickr(chooseDate, options);
 
 // оформлення
