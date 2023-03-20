@@ -14,7 +14,7 @@ btnStart.addEventListener('click', updateTimer);
 
 let countdownIntervalId;
 let selectedDateTime = 0;
-
+let  timeDifference = 0;
 btnStart.disabled = true; //вимикаю кнопку на початку
 
 const options = {

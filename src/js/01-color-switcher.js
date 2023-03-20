@@ -17,10 +17,6 @@ function onBtnColorChange() {
   }, 1000);
 }
 
-function onBtnActive() {
-  body.style.backgroundColor = getRandomHexColor();
-}
-
 button[1].addEventListener('click', () => {
   button[0].removeAttribute('disabled');
   button[1].setAttribute('disabled', true);
